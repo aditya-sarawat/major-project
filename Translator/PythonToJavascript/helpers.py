@@ -11,6 +11,8 @@ from bowler.helpers import print_tree as dumpTree
 import os
 from textwrap import dedent
 
+# --------------------------------------------------------------------------------------------------
+# load grammar & make a driver we can use to parse
 fissix_dir = os.path.dirname( fissix.__file__ )
 grammar_path = os.path.join( fissix_dir, "Grammar.txt" )
 m_grammar = pgen2_driver.load_grammar( grammar_path )
@@ -23,6 +25,7 @@ def getGrammar():
     return m_grammar
 
 
+# --------------------------------------------------------------------------------------------------
 def makeLeaf( type_name, value, prefix="" ):
     type_num = typeNameToNum( type_name )
     return Leaf( type_num, value, prefix=prefix )
@@ -47,6 +50,7 @@ def typeNameToNum( type_name ):
         return num
     raise Exception( "cannot get type num for {}".format( type_name ) )
 
+# --------------------------------------------------------------------------------------------------
 def gatherSubNodesD( nodes, output=None ):
     """ gather all nodes into a flat list - depth-first """
     output = [] if output is None else output
@@ -110,8 +114,10 @@ def typeNumToName( type_num, fallback=... ):
     raise Exception( "cannot get type name for {}".format( type_num ) )
 
 
+# --------------------------------------------------------------------------------------------------
 class Treeverser( object ):
-
+    """ takes a tree (or trees) of nodes so that they can be searched for
+            bowler pattern to yield a list of matches """
 
     def __init__( self, trees ):
         if not isinstance( trees, list ):
@@ -140,6 +146,7 @@ class Treeverser( object ):
         return nodes
 
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 class Match( object ):
     """ holds node and the results captured within it """
 
@@ -167,7 +174,9 @@ class Match( object ):
         return iter( self.results )
 
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 class MatchDumper( object ):
+    """ dumps a Match object for inspection / debug """
 
     def __init__( self, match ):
         self.match = match
@@ -206,8 +215,14 @@ class MatchDumper( object ):
         return output
 
 
+# --------------------------------------------------------------------------------------------------
 class AnonObj( dict ):
- 
+    """ Is it a dict? Is it an object? It's both. Supports dict style
+            access by key (o[ attr_name ]) as well as access by attribute
+            name (o.attr_name)
+        NB inspired by javascript ;-) """
+
+    # attr-style access
     def __getattr__( self, key ):
         try:
             return self[ key ]
@@ -219,3 +234,5 @@ class AnonObj( dict ):
 
     def __delattr__( self, key ):
         del self[ key ]
+
+

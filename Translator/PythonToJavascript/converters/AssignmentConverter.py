@@ -1,5 +1,5 @@
 from Converter import Converter
-from trees import Treeverser, makeLeaf, getNodeIndex, getNodeKind
+from helpers import Treeverser, makeLeaf, getNodeIndex, getNodeKind
 
 
 class AssignmentConverter( Converter ):
@@ -31,3 +31,4 @@ class AssignmentConverter( Converter ):
                     name_node.parent.insert_child( 0, makeLeaf( "PYJS", "let", name_node.prefix ) )
                     name_node.prefix = " "
                     done_vars.append( str_name_node )
+
